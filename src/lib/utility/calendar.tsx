@@ -1,11 +1,15 @@
 /* eslint-disable no-var */
 import dayjs, { Dayjs } from 'dayjs'
+import isoWeek from 'dayjs/plugin/isoWeek' // ES 2015
+
+
+
 import { _get } from './generic'
 import { Dimension, ItemDimension } from '../types/dimension'
 import {
   GroupedItem,
   GroupOrders,
-  GroupStack,
+  GroupStack, HeaderTimelineUnit,
   Id,
   TimelineGroupBase,
   TimelineItemBase,
@@ -14,6 +18,7 @@ import {
 } from '../types/main'
 import { ReactCalendarTimelineProps, ReactCalendarTimelineState } from '../Timeline'
 
+dayjs.extend(isoWeek);
 /**
  * Calculate the ms / pixel ratio of the timeline state
  * @param {number} canvasTimeStart
@@ -67,23 +72,29 @@ export function calculateTimeForXPosition(
 
   return timeFromCanvasTimeStart + canvasTimeStart
 }
-
+// Type guard to check if unit is a key of TimelineTimeSteps
+function isKeyOfTimelineTimeSteps(
+  unit: HeaderTimelineUnit,
+  timeSteps: TimelineTimeSteps
+): unit is keyof TimelineTimeSteps {
+  return unit in timeSteps;
+}
 export function iterateTimes(
   start: number,
   end: number,
-  unit: keyof TimelineTimeSteps,
+  unit: HeaderTimelineUnit,
   timeSteps: TimelineTimeSteps,
   callback: (time: Dayjs, nextTime: Dayjs) => void,
 ) {
   let time = dayjs(start).startOf(unit)
 
-  if (timeSteps[unit] && timeSteps[unit] > 1) {
+  if (isKeyOfTimelineTimeSteps(unit,timeSteps) && timeSteps[unit] && timeSteps[unit] > 1) {
     const value = time.get(unit)
     time.set(unit, value - (value % timeSteps[unit]))
   }
 
   while (time.valueOf() < end) {
-    const nextTime = dayjs(time).add(timeSteps[unit] || 1, unit as dayjs.ManipulateType)
+    const nextTime = (unit==="isoWeek") ?dayjs(time).add(1,"week"): dayjs(time).add((isKeyOfTimelineTimeSteps(unit,timeSteps)?timeSteps[unit]:1) || 1, unit as dayjs.ManipulateType)
     callback(time, nextTime)
     time = nextTime
   }

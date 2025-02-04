@@ -2,7 +2,7 @@ import React, { CSSProperties, ReactNode } from 'react'
 import { useTimelineHeadersContext } from './HeadersContext'
 import { useTimelineState } from '../timeline/TimelineStateContext'
 import { iterateTimes } from '../utility/calendar'
-import { Interval, TimelineTimeSteps } from '../types/main'
+import {HeaderTimelineUnit, Interval} from '../types/main'
 import { Dayjs } from 'dayjs'
 import { CustomDateHeaderProps } from './CustomDateHeader'
 import isEqual from 'lodash/isEqual'
@@ -10,7 +10,7 @@ import { GetIntervalPropsType } from './types'
 
 export type CustomHeaderProps<Data> = {
   children: (p: CustomDateHeaderProps<Data>) => ReactNode
-  unit: keyof TimelineTimeSteps
+  unit: HeaderTimelineUnit
   timeSteps: any
   visibleTimeStart: number
   visibleTimeEnd: number
@@ -27,7 +27,7 @@ export type CustomHeaderProps<Data> = {
 type GetHeaderIntervalsParams = {
   canvasTimeStart: number
   canvasTimeEnd: number
-  unit: keyof TimelineTimeSteps
+  unit: HeaderTimelineUnit
   timeSteps: any
   getLeftOffsetFromDate: (date: any) => number
 }
@@ -188,7 +188,7 @@ class CustomHeader<Data> extends React.Component<CustomHeaderProps<Data>, State>
 
 export type CustomHeaderWrapperProps<Data> = {
   children: (p: CustomDateHeaderProps<Data>) => ReactNode
-  unit?: keyof TimelineTimeSteps
+  unit?: HeaderTimelineUnit
   headerData?: Data
   height?: number | undefined
 }

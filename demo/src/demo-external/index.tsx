@@ -2,10 +2,10 @@
 import dayjs from "dayjs";
 import {ReactNode, useEffect, useMemo, useRef, useState} from 'react';
 import Timeline, {
-    CursorMarker,
-    OnItemDragObjectMove,
-    OnItemDragObjectResize,
-    ReactCalendarTimelineProps, TimelineMarkers, TodayMarker,
+  CursorMarker, CustomHeader, DateHeader,
+  OnItemDragObjectMove,
+  OnItemDragObjectResize,
+  ReactCalendarTimelineProps, TimelineHeaders, TimelineMarkers, TodayMarker,
 } from 'react-calendar-timeline';
 import 'react-calendar-timeline/dist/Timeline.scss';
 
@@ -334,6 +334,38 @@ const App = () => {
                             onItemDrag={handleItemDrag}
                             onTimeChange={handleTimeChange}
                         >
+                          <TimelineHeaders>
+                            <DateHeader unit='primaryHeader'/>
+                            <CustomHeader unit="isoWeek">
+                              {({
+                                  headerContext: { intervals },
+                                  getRootProps,
+                                  getIntervalProps,
+                                  // showPeriod
+                                }) => {
+                                return (
+                                  <div {...getRootProps()}>
+                                    {intervals.map(interval => {
+
+                                      return (
+                                        <div
+                                          {...getIntervalProps({
+                                            interval,
+                                          })}
+                                          className="rct-dateHeader"
+                                        >
+                                          <div >
+                                            week {interval.startTime.isoWeek()}-{interval.startTime.isoWeekYear()}
+                                          </div>
+                                        </div>
+                                      )
+                                    })}
+                                  </div>
+                                )
+                              }}
+                            </CustomHeader>
+                            <DateHeader />
+                          </TimelineHeaders>
                             <TimelineMarkers>
                                 <TodayMarker/>
                                 <CursorMarker/>

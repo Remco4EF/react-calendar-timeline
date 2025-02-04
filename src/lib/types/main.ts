@@ -132,6 +132,7 @@ export interface TimelineTimeSteps {
   year: number
 }
 
+export type HeaderTimelineUnit = keyof TimelineTimeSteps | "week" | "isoWeek"
 export class TimelineMarkers extends Component {}
 
 export interface CustomMarkerChildrenProps {

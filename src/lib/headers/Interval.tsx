@@ -7,7 +7,7 @@ import { GetIntervalPropsType } from './types'
 
 export type IntervalProps<Data> = {
   intervalRenderer: (p: IntervalRenderer<Data>) => ReactNode
-  unit: SelectUnits
+  unit: SelectUnits | "week" | "isoWeek"
   interval: IntervalType
   showPeriod: (startTime: Dayjs, endTime: Dayjs) => void
   intervalText: string
@@ -21,7 +21,7 @@ class Interval<Data> extends React.PureComponent<IntervalProps<Data>> {
   onIntervalClick = () => {
     const { primaryHeader, interval, unit, showPeriod } = this.props
     if (primaryHeader) {
-      const nextUnit = getNextUnit(unit)
+      const nextUnit = getNextUnit(unit as SelectUnits)
       const newStartTime = interval.startTime.clone().startOf(nextUnit)
       const newEndTime = interval.startTime.clone().endOf(nextUnit)
       showPeriod(newStartTime, newEndTime)
@@ -41,7 +41,7 @@ class Interval<Data> extends React.PureComponent<IntervalProps<Data>> {
   }
 
   render() {
-    const { intervalText, interval, intervalRenderer, headerData } = this.props
+    const {intervalText, interval, intervalRenderer, headerData} = this.props
     const Renderer = intervalRenderer
     if (Renderer) {
       return (
@@ -55,7 +55,7 @@ class Interval<Data> extends React.PureComponent<IntervalProps<Data>> {
         />
       )
     }
-    const { key, ...rest } = this.getIntervalProps()
+    const {key, ...rest} = this.getIntervalProps()
     return (
       <div
         data-testid="dateHeaderInterval"

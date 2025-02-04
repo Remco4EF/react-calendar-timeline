@@ -8,7 +8,7 @@ import { GetIntervalPropsType } from './types'
 export interface CustomDateHeaderProps<Data> {
   headerContext: {
     intervals: IntervalType[]
-    unit: SelectUnits
+    unit: SelectUnits | "week" | "isoWeek"
   }
   getRootProps: (props?: { style?: React.CSSProperties }) => HTMLProps<HTMLDivElement>
   getIntervalProps: GetIntervalPropsType
